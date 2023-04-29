@@ -28,8 +28,6 @@ SECRET_KEY = "django-insecure-lzgo8_$)j1!75m)_26-4aa4!go0@ff%5rkg)79$l$0-#e*zo4p
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -107,7 +105,7 @@ ROOT_URLCONF = "depotsite.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / 'templates'],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -126,6 +124,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "depotsite.wsgi.application"
 
+
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost', '127.0.0.1'])
+
+EMAIL_SUBJECT_PREFIX = '[Oscar sandbox] '
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
@@ -188,6 +191,7 @@ STATIC_ROOT = BASE_DIR / 'public/static'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATICFILES_DIRS = (
     BASE_DIR / 'static',
+    BASE_DIR / 'depotsite/static'
 )
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
@@ -214,3 +218,7 @@ THUMBNAIL_KVSTORE = env(
     'THUMBNAIL_KVSTORE',
     default='sorl.thumbnail.kvstores.cached_db_kvstore.KVStore')
 THUMBNAIL_REDIS_URL = env('THUMBNAIL_REDIS_URL', default=None)
+
+# Customizations
+OSCAR_SHOP_NAME = 'Cheapo'
+OSCAR_SHOP_TAGLINE = 'Depot'
