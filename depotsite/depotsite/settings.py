@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import environ
 from pathlib import Path
 from oscar.defaults import *
+from oscar.defaults import *
 
 env = environ.Env()
 
@@ -79,7 +80,14 @@ INSTALLED_APPS = [
     'treebeard',
     'sorl.thumbnail',   # Default thumbnail backend, can be replaced
     'django_tables2',
+
+    # Payments
+    'oscar_accounts.apps.AccountsConfig',
+    'oscar_accounts.dashboard.apps.AccountsDashboardConfig',
 ]
+
+INSTALLED_APPS[INSTALLED_APPS.index('oscar.apps.shipping.apps.ShippingConfig')] = 'apps.shipping.apps.ShippingConfig'
+INSTALLED_APPS[INSTALLED_APPS.index('oscar.apps.checkout.apps.CheckoutConfig')] = 'apps.checkout.apps.CheckoutConfig'
 
 SITE_ID = 1
 
@@ -220,5 +228,40 @@ THUMBNAIL_KVSTORE = env(
 THUMBNAIL_REDIS_URL = env('THUMBNAIL_REDIS_URL', default=None)
 
 # Customizations
+# ==============
 OSCAR_SHOP_NAME = 'Cheapo'
 OSCAR_SHOP_TAGLINE = 'Depot'
+
+OSCAR_INITIAL_ORDER_STATUS = 'Pending'
+OSCAR_INITIAL_LINE_STATUS = 'Pending'
+OSCAR_ORDER_STATUS_PIPELINE = {
+    'Pending': ('Being processed', 'Cancelled',),
+    'Being processed': ('Processed', 'Cancelled',),
+    'Cancelled': (),
+}
+
+
+# Payment Account Settings
+OSCAR_DASHBOARD_NAVIGATION.append(
+    {
+        'label': 'Accounts',
+        'icon': 'fas fa-globe',
+        'children': [
+            {
+                'label': 'Accounts',
+                'url_name': 'accounts_dashboard:accounts-list',
+            },
+            {
+                'label': 'Transfers',
+                'url_name': 'accounts_dashboard:transfers-list',
+            },
+            {
+                'label': 'Deferred income report',
+                'url_name': 'accounts_dashboard:report-deferred-income',
+            },
+            {
+                'label': 'Profit/loss report',
+                'url_name': 'accounts_dashboard:report-profit-loss',
+            },
+        ]
+    })

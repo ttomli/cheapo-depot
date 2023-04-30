@@ -19,6 +19,8 @@ from django.contrib import admin
 from django.conf.urls.static import static
 from django.conf import settings
 
+from oscar_accounts.views import AccountBalanceView
+
 urlpatterns = [
     path('i18n/', include('django.conf.urls.i18n')),
 
@@ -27,6 +29,9 @@ urlpatterns = [
 
     path('admin/', admin.site.urls),
 
+    # django-oscar-accounts used to checkout payment page
+    path('giftcard-balance/', AccountBalanceView.as_view(), name="account-balance"),
+    path('dashboard/accounts/', apps.get_app_config('accounts_dashboard').urls),
     path('', include(apps.get_app_config('oscar').urls[0])),
 ]
 
