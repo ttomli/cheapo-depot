@@ -9,10 +9,14 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
+import os
 import environ
 from pathlib import Path
 from oscar.defaults import *
 from oscar.defaults import *
+from dotenv import load_dotenv
+load_dotenv()
+
 
 env = environ.Env()
 
@@ -24,7 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-lzgo8_$)j1!75m)_26-4aa4!go0@ff%5rkg)79$l$0-#e*zo4p"
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -166,6 +170,10 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",},
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",},
 ]
+
+# Deployment
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 # Meta
 # ====
